@@ -1,0 +1,111 @@
+               ....................>>>>>>> Redux Toolkit <<<<<<<...................
+ npm install @reduxjs/toolkit
+
+
+1 .... create slide 
+
+import { createSlice } from "@reduxjs/toolkit";
+
+const initialState = {
+    auth : false,
+    data:null,
+    error:null,
+    loading:false
+  }
+
+  const authSlide = createSlice({
+    name:"auth",
+    initialState,
+    reducers : {
+        processing: (state) => {
+           state.loading = true
+        },
+        error : (state,action) => {
+            state.loading=false;
+            state.error =action.payload;
+        } ,
+        login : (state,action) => {
+            state.loading = true;
+            state.error =null ;
+            state.data = action.payload;
+            state.auth = true;
+        } ,
+        logout : (state,action) => {
+            state.loading = false;
+            state.error =null ;
+            
+            state.auth = false;
+        }
+
+    }
+  })
+
+
+  export const {error,login,logout,processing} = authSlide.actions
+  export default authSlide.reducer
+
+<..........................................................................................>
+
+
+2...... create store
+
+import { configureStore } from "@reduxjs/toolkit";
+import authSlice from "../slice/auth.slice";
+
+
+export const store = configureStore({                  // with redux toolkit
+    reducer : {
+        auth : authSlice
+    }
+})
+
+
+............................................................................................
+
+
+
+
+3........  Warp {store} to  main.js or top layer components
+
+
+import { Provider } from 'react-redux'
+import { store } from './store/store.js'
+
+ReactDOM.createRoot(document.getElementById('root')).render(
+  
+  
+ <Provider store={store}>
+  <App />
+ </Provider>
+    
+)
+
+............................................................................................
+
+4..........   changing state with dispatch
+
+import { useDispatch } from "react-redux";
+
+const dispatch = useDispatch()
+
+ const formSubmit = async(e) => {
+     
+      try {
+
+
+        dispatch( processing() )
+
+
+        const res = await Login(formData)
+        
+      } catch (e) {
+        dispatch({type:"error",payload:"error"})
+      }
+
+       
+   }
+
+
+
+
+ 

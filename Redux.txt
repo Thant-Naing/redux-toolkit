@@ -1,0 +1,59 @@
+      .......>>>>>>>>>  USING   REDUX   <<<<<<.....................
+
+JUN 17 2024,
+
+
+install >>>    npm i redux react-redux react-thunk
+
+................................... create reducerFunction.................................
+
+const initialState = {
+   auth : false,
+   data:null
+ }
+
+ export const authReducer = (store=initialState , action) => {
+      switch (action.type) {
+        case "login" :
+            return ({...store,auth:true,data:action.payload})
+        case "logout" :
+             return ({...store,auth:false,data:null})
+        default : return store     
+           
+      }
+ } 
+
+
+............................ combine reducer and create store.............................
+
+
+import { thunk } from "redux-thunk";
+import { authReducer } from "./Auth.reducer";
+import { applyMiddleware, combineReducers,createStore } from "redux";
+
+const combineReduce =combineReducers({
+    auth : authReducer
+})
+
+export const store = createStore( combineReduce,{},applyMiddleware(thunk))
+
+
+
+...........................warp over main App layer....................................
+
+import { BrowserRouter } from 'react-router-dom'
+import { Provider } from 'react-redux'
+import { store } from './store/store.js'
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <BrowserRouter>
+  
+
+ <Provider store={store}>
+  <App />
+ </Provider>
+    
+  
+  </BrowserRouter>
+  
+ 
+)
